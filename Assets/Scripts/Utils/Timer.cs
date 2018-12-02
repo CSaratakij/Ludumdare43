@@ -72,6 +72,7 @@ namespace Ludumdare43
         public void Reset()
         {
             current = max;
+            isStart = false;
         }
 
         public void Pause(bool value)
