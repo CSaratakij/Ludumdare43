@@ -64,6 +64,8 @@ namespace Ludumdare43
         public bool IsTackling { get { return isToggleTackle; } }
         public bool IsPickedUp { get { return isPickedUp; } }
         public bool IsBreakFree { get { return isBreakFree; } }
+        public bool IsCarrySomeone { get { return isCarrySomeone; } }
+        public PlayerController CarryPlayer { get { return carryPlayer; } }
 
         bool isToggleRun;
         bool isToggleTackle;
@@ -129,7 +131,6 @@ namespace Ludumdare43
         void FixedUpdate()
         {
             MovementHandler();
-            TacklePlayerHandler();
         }
 
         void Initialize()
@@ -218,40 +219,6 @@ namespace Ludumdare43
             rigid.velocity = velocity;
         }
 
-        void TacklePlayerHandler()
-        {
-            if (isStunt)
-                return;
-
-            if (isTarget)
-                return;
-
-            if (!isToggleTackle)
-                return;
-
-            hits = Physics.OverlapCapsule(rigid.position + transform.forward * 3.0f, rigid.position + Vector3.down * 3.0f, 3.0f, targetLayer);
-
-            foreach (Collider collider in hits)
-            {
-                PlayerController player = collider.GetComponent<PlayerController>();
-
-                if (player == null)
-                    continue;
-
-                if (!player.IsTarget)
-                    continue;
-
-                if (player.IsPickedUp)
-                    continue;
-
-                player.Stunt();
-                Pickup(player, true);
-            }
-
-            //if catch fail, make player unable to move for a short period of time, If catch pass, make player catch other player immediately (make player movement slower a little bit..)
-            //if player 1 and player 2 has an opposite forward vector to each other when tackle, (cancel out)
-        }
-
         void LookToInputDirection()
         {
             if (isStunt)
@@ -282,12 +249,12 @@ namespace Ludumdare43
             if (carryPlayer == null || carryRigid == null || carryTarget == null)
                 return;
 
-            if (isCarrySomeone && carryPlayer.IsTarget && !carryPlayer.IsBreakFree) {
+            if (isCarrySomeone && !carryPlayer.IsBreakFree) {
                 carryTarget.position = carryPoint.position;
                 carryTarget.Rotate(Vector3.up * 60.0f * Time.deltaTime, Space.World);
             }
             else {
-                Pickup(carryPlayer, false);
+                isCarrySomeone = false;
                 carryRigid.velocity = (Vector3.up * breakFreeForce) * Time.fixedDeltaTime;
 
                 carryPlayer = null;
@@ -304,8 +271,17 @@ namespace Ludumdare43
                 if (collidePlayer == null)
                     return;
 
-                if (collidePlayer.IsTackling && isCarrySomeone) {
-                    isCarrySomeone = false;
+                if (isToggleTackle && !isCarrySomeone && !collidePlayer.IsTackling) {
+                    if (collidePlayer.IsCarrySomeone) {
+                        var p = collidePlayer.CarryPlayer;
+                        collidePlayer.UnPickOldOne();
+                        Pickup(p, true);
+                        collidePlayer.Stunt();
+                    }
+                    else {
+                        UnPickOldOne();
+                        Pickup(collidePlayer, true);
+                    }
                 }
             }
         }
@@ -395,7 +371,6 @@ namespace Ludumdare43
 
         public void Stunt()
         {
-            isCarrySomeone = false;
             stuntTimer.Reset();
             stuntTimer.Countdown();
         }
@@ -415,6 +390,14 @@ namespace Ludumdare43
                 carryTarget.rotation = Quaternion.Euler(-90.0f, 0.0f, 0.0f);
 
             target.MarkPickup(value);
+        }
+
+        public void UnPickOldOne()
+        {
+            if (carryPlayer == null)
+                return;
+
+            Pickup(carryPlayer, false);
         }
 
         public void MarkPickup(bool value)
