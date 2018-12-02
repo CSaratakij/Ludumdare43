@@ -42,15 +42,22 @@ namespace Ludumdare43
         [SerializeField]
         Status health;
 
+        [SerializeField]
+        Transform carryPoint;
+
+        [SerializeField]
+        LayerMask targetLayer;
+
         public bool IsTarget { get { return isTarget; } }
         public bool IsTackling { get { return isToggleTackle; } }
 
         bool isToggleRun;
         bool isToggleTackle;
         bool isTarget;
-        bool isCarrySomeone; //if carrying someone, get tackle -> throw target up, nagative face dir
+        bool isCarrySomeone;
         bool isPressedCarry;
         bool isStunt;
+        bool isPickedUp;
 
         bool isCanTackle = true;
         bool isCanToggleRun = true;
@@ -67,20 +74,30 @@ namespace Ludumdare43
         Rigidbody rigid;
 
         Transform carryTarget;
+        PlayerController carryPlayer;
+        Rigidbody carryRigid;
+
+        Collider[] hits;
 
 
 #if UNITY_EDITOR
         void OnDrawGizmos()
         {
             Gizmos.color = Color.yellow;
-            //Gizmos.DrawWireCube(transform.position + new Vector3(offset.x, offset.y, 0.0f), size);
-            //Handles.Label(transform.position, "Require Coin : " + requireCoin);
+            Gizmos.DrawWireCube(transform.position + transform.forward * 1.2f, new Vector3(1.0f, 0.5f, 1.5f) * 2.0f);
         }
 #endif
         void Awake()
         {
             Initialize();
             SubscribeEvents();
+        }
+
+        //Test
+        void Start()
+        {
+            if (playerIndex == 0)
+                SetTarget(true);
         }
 
         void OnDestroy()
@@ -91,17 +108,21 @@ namespace Ludumdare43
         void Update()
         {
             InputHandler();
+
+            if (!isCanTackle && !isCarrySomeone && !isStunt)
+                stuntTimer.Countdown();
         }
 
         void LateUpdate()
         {
             LookToInputDirection();
+            CarrySomeone();
         }
 
         void FixedUpdate()
         {
             MovementHandler();
-            CarryPlayerHandler();
+            TacklePlayerHandler();
         }
 
         void Initialize()
@@ -143,8 +164,7 @@ namespace Ludumdare43
                 runTimer.Countdown();
             }
 
-            //if only 2 player left -> make remains player a target an exception to use tackle ability
-            if (!isTarget && isCanTackle && Input.GetButtonDown("Joy" + playerIndex + "Tackle")) {
+            if (isCanTackle && Input.GetButtonDown("Joy" + playerIndex + "Tackle")) {
                 runTimer.Stop();
                 tackleTimer.Countdown();
             }
@@ -154,7 +174,7 @@ namespace Ludumdare43
 
         void MovementHandler()
         {
-            if (isStunt || !isCanTackle) {
+            if (isStunt) {
                 rigid.velocity = Vector3.zero;
                 return;
             }
@@ -173,9 +193,10 @@ namespace Ludumdare43
             }
 
             rigid.AddForce(velocity, ForceMode.Impulse);
+            rigid.AddForce(Vector3.up * -400 * Time.deltaTime, ForceMode.Force);
         }
 
-        void CarryPlayerHandler()
+        void TacklePlayerHandler()
         {
             if (isStunt)
                 return;
@@ -183,16 +204,43 @@ namespace Ludumdare43
             if (isTarget)
                 return;
 
+            if (!isToggleTackle)
+                return;
+
+            hits = Physics.OverlapBox(rigid.position + Vector3.forward, new Vector3(1.0f, 0.5f, 1.5f), Quaternion.identity, targetLayer);
+
+            foreach (Collider collider in hits)
+            {
+                PlayerController player = collider.GetComponent<PlayerController>();
+
+                if (player == null)
+                    continue;
+
+                if (!player.IsTarget)
+                    continue;
+
+                player.Stunt();
+                Pickup(player, true);
+            }
+
             //overlap circle,  check if that player is stunt...check if that player is a target, check if this player pressed carry, then carry a target...
             //when target has carried by someone, set rigidbody to kinematic? and follow carry target point, when carrier release, change back to dynamic
 
             //if catch fail, make player unable to move for a short period of time, If catch pass, make player catch other player immediately (make player movement slower a little bit..)
 
             //if can catch target -> don't stop on tackle
+            //if player 1 and player 2 has an opposite forward vector to each other when tackle, (cancel out)
         }
 
         void LookToInputDirection()
         {
+            if (isStunt)
+                return;
+
+            if (isPickedUp) {
+                return;
+            }
+
             lastInputDir.x = lastInputVector.x;
             lastInputDir.y = 0.0f;
             lastInputDir.z = lastInputVector.y;
@@ -202,6 +250,25 @@ namespace Ludumdare43
             if (relativeVector != Vector3.zero) {
                 targetRotation = Quaternion.LookRotation(relativeVector, Vector3.up);
                 transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 0.2f);
+            }
+        }
+
+        void CarrySomeone()
+        {
+            if (carryPlayer == null || carryRigid == null || carryTarget == null)
+                return;
+
+            if (isCarrySomeone && carryPlayer.isTarget) {
+                carryTarget.position = carryPoint.position;
+                carryTarget.Rotate(Vector3.up * 60.0f * Time.deltaTime, Space.World);
+            }
+            else {
+                Pickup(carryPlayer, false);
+                carryRigid.AddForce(Vector3.up * 800.0f * Time.deltaTime, ForceMode.Impulse);
+
+                carryPlayer = null;
+                carryTarget = null;
+                carryRigid = null;
             }
         }
 
@@ -240,6 +307,8 @@ namespace Ludumdare43
         void runTimer_OnTimerStart()
         {
             isToggleRun = true;
+            //Test
+            isCarrySomeone = false;
         }
 
         void runTimer_OnTimerStop()
@@ -272,8 +341,17 @@ namespace Ludumdare43
 
         void tackleTimer_OnTimerStop()
         {
+            //check if hit target, if hit target -> don't stunt
+            /*
+            if (!isCarrySomeone) {
+                isStunt = true;
+                stuntTimer.Countdown();
+            }
+            */
+
             isCanTackle = false;
             isToggleTackle = false;
+
             tackleCooldown.Countdown();
         }
 
@@ -285,6 +363,43 @@ namespace Ludumdare43
         public void SetTarget(bool value)
         {
             isTarget = value;
+        }
+
+        public void Stunt()
+        {
+            isCarrySomeone = false;
+            stuntTimer.Reset();
+            stuntTimer.Countdown();
+        }
+
+        public void Pickup(PlayerController target, bool value)
+        {
+            isCarrySomeone = value;
+
+            carryPlayer = target;
+            carryTarget = target.transform;
+            carryRigid = target.rigid;
+
+            carryRigid.isKinematic = value;
+            target.GetComponent<CapsuleCollider>().enabled = !value;
+
+            if (value)
+                carryTarget.rotation = Quaternion.Euler(-90.0f, 0.0f, 0.0f);
+
+            target.MarkPickup(value);
+
+            /*
+            else
+                carryTarget.rotation = Quaternion.Euler(Vector3.zero); //need button mash to get up
+            */
+        }
+
+        public void MarkPickup(bool value)
+        {
+            isPickedUp = value;
+
+            if (!value)
+                lastInputDir = Vector3.zero;
         }
     }
 }
