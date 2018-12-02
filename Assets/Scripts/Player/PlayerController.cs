@@ -2,10 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-#if UNITY_EDITOR
-    using UnityEditor;
-#endif
-
 namespace Ludumdare43
 {
     [RequireComponent(typeof(Rigidbody))]
@@ -23,6 +19,12 @@ namespace Ludumdare43
 
         [SerializeField]
         float tackleSpeed;
+
+        [SerializeField]
+        GameObject model;
+
+        [SerializeField]
+        Material[] playerMaterial;
 
         [SerializeField]
         Timer runTimer;
@@ -80,13 +82,6 @@ namespace Ludumdare43
         Collider[] hits;
 
 
-#if UNITY_EDITOR
-        void OnDrawGizmos()
-        {
-            Gizmos.color = Color.yellow;
-            Gizmos.DrawWireCube(transform.position + transform.forward * 3.2f, new Vector3(1.0f, 0.5f, 1.5f) * 2.0f);
-        }
-#endif
         void Awake()
         {
             Initialize();
@@ -109,8 +104,10 @@ namespace Ludumdare43
         {
             InputHandler();
 
-            if (!isCanTackle && !isCarrySomeone && !isStunt)
+            /*
+            if (!isCanTackle && !isCarrySomeone //&& //!isStunt)
                 stuntTimer.Countdown();
+            */
         }
 
         void LateUpdate()
@@ -128,6 +125,7 @@ namespace Ludumdare43
         void Initialize()
         {
             rigid = GetComponent<Rigidbody>();
+            model.GetComponent<Renderer>().material = playerMaterial[playerIndex];
         }
 
         void InputHandler()
@@ -164,7 +162,7 @@ namespace Ludumdare43
                 runTimer.Countdown();
             }
 
-            if (isCanTackle && Input.GetButtonDown("Joy" + playerIndex + "Tackle")) {
+            if (isCanTackle && !isCarrySomeone && Input.GetButtonDown("Joy" + playerIndex + "Tackle")) {
                 runTimer.Stop();
                 tackleTimer.Countdown();
             }
@@ -172,7 +170,7 @@ namespace Ludumdare43
 
         void MovementHandler()
         {
-            if (isStunt) {
+            if (isStunt || (!isCanTackle && !isCarrySomeone)) {
                 rigid.velocity = Vector3.zero;
                 return;
             }
@@ -191,7 +189,7 @@ namespace Ludumdare43
             }
 
             rigid.AddForce(velocity, ForceMode.Impulse);
-            rigid.AddForce(Vector3.up * -400 * Time.deltaTime, ForceMode.Force);
+            rigid.AddForce(Vector3.up * -500 * Time.deltaTime, ForceMode.Force);
         }
 
         void TacklePlayerHandler()
@@ -205,7 +203,7 @@ namespace Ludumdare43
             if (!isToggleTackle)
                 return;
 
-            hits = Physics.OverlapBox(rigid.position + Vector3.forward * 3.0f, new Vector3(1.0f, 0.5f, 1.5f), Quaternion.identity, targetLayer);
+            hits = Physics.OverlapCapsule(rigid.position + transform.forward * 3.0f, rigid.position + Vector3.down * 3.0f, 3.0f, targetLayer);
 
             foreach (Collider collider in hits)
             {
@@ -234,6 +232,10 @@ namespace Ludumdare43
         {
             if (isStunt)
                 return;
+
+            if (isToggleTackle) {
+                return;
+            }
 
             if (isPickedUp) {
                 return;
@@ -267,6 +269,20 @@ namespace Ludumdare43
                 carryPlayer = null;
                 carryTarget = null;
                 carryRigid = null;
+            }
+        }
+
+        void OnCollisionEnter(Collision collision)
+        {
+            if (collision.gameObject.CompareTag("Player")) {
+                PlayerController collidePlayer = collision.gameObject.GetComponent<PlayerController>();
+
+                if (collidePlayer == null)
+                    return;
+
+                if (collidePlayer.IsTackling && isCarrySomeone) {
+                    isCarrySomeone = false;
+                }
             }
         }
 
@@ -305,8 +321,6 @@ namespace Ludumdare43
         void runTimer_OnTimerStart()
         {
             isToggleRun = true;
-            //Test
-            isCarrySomeone = false;
         }
 
         void runTimer_OnTimerStop()
@@ -339,16 +353,8 @@ namespace Ludumdare43
 
         void tackleTimer_OnTimerStop()
         {
-            //check if hit target, if hit target -> don't stunt
-            /*
-            if (!isCarrySomeone) {
-                isStunt = true;
-                stuntTimer.Countdown();
-            }
-            */
-
-            isCanTackle = false;
             isToggleTackle = false;
+            isCanTackle = false;
 
             tackleCooldown.Countdown();
         }
