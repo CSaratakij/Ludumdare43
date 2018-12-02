@@ -16,6 +16,12 @@ namespace Ludumdare43
         int maxGetup;
 
         [SerializeField]
+        float gravity;
+
+        [SerializeField]
+        float breakFreeForce;
+
+        [SerializeField]
         float walkSpeed;
 
         [SerializeField]
@@ -57,6 +63,7 @@ namespace Ludumdare43
         public bool IsTarget { get { return isTarget; } }
         public bool IsTackling { get { return isToggleTackle; } }
         public bool IsPickedUp { get { return isPickedUp; } }
+        public bool IsBreakFree { get { return isBreakFree; } }
 
         bool isToggleRun;
         bool isToggleTackle;
@@ -64,6 +71,7 @@ namespace Ludumdare43
         bool isCarrySomeone;
         bool isStunt;
         bool isPickedUp;
+        bool isBreakFree = true;
 
         bool isCanTackle = true;
         bool isCanToggleRun = true;
@@ -79,11 +87,12 @@ namespace Ludumdare43
         Vector3 relativeVector;
 
         Quaternion targetRotation;
+
         Rigidbody rigid;
+        Rigidbody carryRigid;
 
         Transform carryTarget;
         PlayerController carryPlayer;
-        Rigidbody carryRigid;
 
         Collider[] hits;
 
@@ -170,14 +179,16 @@ namespace Ludumdare43
 
             if (isPickedUp)
             {
-                bool isPressedGetUp = Input.GetButtonDown("Joy" + playerIndex + "GetUp");
+                bool isPressedGetUp = Input.GetButtonUp("Joy" + playerIndex + "GetUp");
 
                 if (isPressedGetUp) {
                     if (getupProgress < maxGetup) {
                         getupProgress += 1;
                     }
                     else {
-                        //be free here..
+                        getupProgress = 0;
+                        isPickedUp = false;
+                        Pickup(this, false);
                     }
                 }
             }
@@ -203,8 +214,8 @@ namespace Ludumdare43
                 velocity.z = (inputVector.y * walkSpeed) * Time.fixedDeltaTime;
             }
 
-            rigid.AddForce(velocity, ForceMode.Impulse);
-            rigid.AddForce(Vector3.up * -500 * Time.deltaTime, ForceMode.Force);
+            velocity.y = rigid.velocity.y + (-gravity * Time.fixedDeltaTime);
+            rigid.velocity = velocity;
         }
 
         void TacklePlayerHandler()
@@ -238,8 +249,6 @@ namespace Ludumdare43
             }
 
             //if catch fail, make player unable to move for a short period of time, If catch pass, make player catch other player immediately (make player movement slower a little bit..)
-
-            //if can catch target -> don't stop on tackle
             //if player 1 and player 2 has an opposite forward vector to each other when tackle, (cancel out)
         }
 
@@ -273,13 +282,13 @@ namespace Ludumdare43
             if (carryPlayer == null || carryRigid == null || carryTarget == null)
                 return;
 
-            if (isCarrySomeone && carryPlayer.isTarget) {
+            if (isCarrySomeone && carryPlayer.IsTarget && !carryPlayer.IsBreakFree) {
                 carryTarget.position = carryPoint.position;
                 carryTarget.Rotate(Vector3.up * 60.0f * Time.deltaTime, Space.World);
             }
             else {
                 Pickup(carryPlayer, false);
-                carryRigid.AddForce(Vector3.up * 800.0f * Time.deltaTime, ForceMode.Impulse);
+                carryRigid.velocity = (Vector3.up * breakFreeForce) * Time.fixedDeltaTime;
 
                 carryPlayer = null;
                 carryTarget = null;
@@ -411,6 +420,7 @@ namespace Ludumdare43
         public void MarkPickup(bool value)
         {
             isPickedUp = value;
+            isBreakFree = !value;
 
             if (value) {
                 getupProgress = 0;
