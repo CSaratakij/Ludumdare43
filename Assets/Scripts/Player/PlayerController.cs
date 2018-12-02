@@ -50,12 +50,12 @@ namespace Ludumdare43
 
         public bool IsTarget { get { return isTarget; } }
         public bool IsTackling { get { return isToggleTackle; } }
+        public bool IsPickedUp { get { return isPickedUp; } }
 
         bool isToggleRun;
         bool isToggleTackle;
         bool isTarget;
         bool isCarrySomeone;
-        bool isPressedCarry;
         bool isStunt;
         bool isPickedUp;
 
@@ -84,7 +84,7 @@ namespace Ludumdare43
         void OnDrawGizmos()
         {
             Gizmos.color = Color.yellow;
-            Gizmos.DrawWireCube(transform.position + transform.forward * 1.2f, new Vector3(1.0f, 0.5f, 1.5f) * 2.0f);
+            Gizmos.DrawWireCube(transform.position + transform.forward * 3.2f, new Vector3(1.0f, 0.5f, 1.5f) * 2.0f);
         }
 #endif
         void Awake()
@@ -168,8 +168,6 @@ namespace Ludumdare43
                 runTimer.Stop();
                 tackleTimer.Countdown();
             }
-
-            isPressedCarry = Input.GetButton("Joy" + playerIndex + "Carry");
         }
 
         void MovementHandler()
@@ -207,7 +205,7 @@ namespace Ludumdare43
             if (!isToggleTackle)
                 return;
 
-            hits = Physics.OverlapBox(rigid.position + Vector3.forward, new Vector3(1.0f, 0.5f, 1.5f), Quaternion.identity, targetLayer);
+            hits = Physics.OverlapBox(rigid.position + Vector3.forward * 3.0f, new Vector3(1.0f, 0.5f, 1.5f), Quaternion.identity, targetLayer);
 
             foreach (Collider collider in hits)
             {
@@ -219,12 +217,12 @@ namespace Ludumdare43
                 if (!player.IsTarget)
                     continue;
 
+                if (player.IsPickedUp)
+                    continue;
+
                 player.Stunt();
                 Pickup(player, true);
             }
-
-            //overlap circle,  check if that player is stunt...check if that player is a target, check if this player pressed carry, then carry a target...
-            //when target has carried by someone, set rigidbody to kinematic? and follow carry target point, when carrier release, change back to dynamic
 
             //if catch fail, make player unable to move for a short period of time, If catch pass, make player catch other player immediately (make player movement slower a little bit..)
 
