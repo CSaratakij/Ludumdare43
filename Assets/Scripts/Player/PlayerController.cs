@@ -12,6 +12,10 @@ namespace Ludumdare43
         int playerIndex;
 
         [SerializeField]
+        [Range(1, 30)]
+        int maxGetup;
+
+        [SerializeField]
         float walkSpeed;
 
         [SerializeField]
@@ -64,6 +68,8 @@ namespace Ludumdare43
         bool isCanTackle = true;
         bool isCanToggleRun = true;
 
+        int getupProgress;
+
         Vector2 inputVector;
         Vector2 lastInputVector;
         Vector2 tackleDirection;
@@ -103,11 +109,6 @@ namespace Ludumdare43
         void Update()
         {
             InputHandler();
-
-            /*
-            if (!isCanTackle && !isCarrySomeone //&& //!isStunt)
-                stuntTimer.Countdown();
-            */
         }
 
         void LateUpdate()
@@ -165,6 +166,20 @@ namespace Ludumdare43
             if (isCanTackle && !isCarrySomeone && Input.GetButtonDown("Joy" + playerIndex + "Tackle")) {
                 runTimer.Stop();
                 tackleTimer.Countdown();
+            }
+
+            if (isPickedUp)
+            {
+                bool isPressedGetUp = Input.GetButtonDown("Joy" + playerIndex + "GetUp");
+
+                if (isPressedGetUp) {
+                    if (getupProgress < maxGetup) {
+                        getupProgress += 1;
+                    }
+                    else {
+                        //be free here..
+                    }
+                }
             }
         }
 
@@ -391,19 +406,18 @@ namespace Ludumdare43
                 carryTarget.rotation = Quaternion.Euler(-90.0f, 0.0f, 0.0f);
 
             target.MarkPickup(value);
-
-            /*
-            else
-                carryTarget.rotation = Quaternion.Euler(Vector3.zero); //need button mash to get up
-            */
         }
 
         public void MarkPickup(bool value)
         {
             isPickedUp = value;
 
-            if (!value)
+            if (value) {
+                getupProgress = 0;
+            }
+            else {
                 lastInputDir = Vector3.zero;
+            }
         }
     }
 }
