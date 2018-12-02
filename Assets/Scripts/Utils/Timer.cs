@@ -54,7 +54,9 @@ namespace Ludumdare43
             if (isStart)
                 return;
 
+            Reset();
             isStart = true;
+
             FireEvent_OnTimerStart();
         }
 

@@ -13,6 +13,12 @@ namespace Ludumdare43
         [SerializeField]
         float runSpeed;
 
+        [SerializeField]
+        Timer runTimer;
+
+        [SerializeField]
+        Status health;
+
         bool isToggleRun;
         bool isTarget;
 
@@ -24,14 +30,18 @@ namespace Ludumdare43
         Vector3 relativeVector;
 
         Quaternion targetRotation;
-
         Rigidbody rigid;
-        Status health;
 
 
         void Awake()
         {
             Initialize();
+            SubscribeEvents();
+        }
+
+        void OnDestroy()
+        {
+            UnsubscribeEvents();
         }
 
         void Update()
@@ -56,6 +66,9 @@ namespace Ludumdare43
 
         void InputHandler()
         {
+            if (Input.GetButtonDown("ToggleRun"))
+                runTimer.Countdown();
+
             if (inputVector.x != 0.0f || inputVector.y != 0.0f)
                 lastInputVector = inputVector;
 
@@ -92,6 +105,28 @@ namespace Ludumdare43
                 targetRotation = Quaternion.LookRotation(relativeVector, Vector3.up);
                 transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 0.2f);
             }
+        }
+
+        void SubscribeEvents()
+        {
+            runTimer.OnTimerStart += OnTimerStart;
+            runTimer.OnTimerStop += OnTimerStop;
+        }
+
+        void UnsubscribeEvents()
+        {
+            runTimer.OnTimerStart -= OnTimerStart;
+            runTimer.OnTimerStop -= OnTimerStop;
+        }
+
+        void OnTimerStart()
+        {
+            isToggleRun = true;
+        }
+
+        void OnTimerStop()
+        {
+            isToggleRun = false;
         }
     }
 }
