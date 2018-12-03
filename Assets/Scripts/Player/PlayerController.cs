@@ -28,7 +28,16 @@ namespace Ludumdare43
         float runSpeed;
 
         [SerializeField]
+        float carrySomeoneWalkSpeed;
+
+        [SerializeField]
+        float carrySomeoneRunSpeed;
+
+        [SerializeField]
         float tackleSpeed;
+
+        [SerializeField]
+        Animator anim;
 
         [SerializeField]
         GameObject model;
@@ -120,6 +129,7 @@ namespace Ludumdare43
         void Update()
         {
             InputHandler();
+            AnimationHandler();
         }
 
         void LateUpdate()
@@ -185,6 +195,7 @@ namespace Ludumdare43
                 if (isPressedGetUp) {
                     if (getupProgress < maxGetup) {
                         getupProgress += 1;
+                        anim.SetTrigger("strugle");
                     }
                     else {
                         getupProgress = 0;
@@ -195,6 +206,21 @@ namespace Ludumdare43
             }
         }
 
+        void AnimationHandler()
+        {
+            if (inputVector.x != 0.0f || inputVector.y != 0.0f) {
+                anim.SetFloat("Speed", (isToggleRun) ? 2.0f : 1.0f);
+            }
+            else {
+                anim.SetFloat("Speed", 0.0f);
+            }
+
+            anim.SetBool("holdingTarget", isCarrySomeone);
+            anim.SetBool("IsCanTackle", isCanTackle);
+            anim.SetBool("IsPickedUp", isPickedUp);
+            anim.SetBool("IsToggleTackle", isToggleTackle);
+        }
+
         void MovementHandler()
         {
             if (isStunt || (!isCanTackle && !isCarrySomeone)) {
@@ -202,18 +228,37 @@ namespace Ludumdare43
                 return;
             }
 
-            if (isToggleRun) {
-                velocity.x = (inputVector.x * runSpeed) * Time.fixedDeltaTime;
-                velocity.z = (inputVector.y * runSpeed) * Time.fixedDeltaTime;
+            if (isCarrySomeone)
+            {
+                if (isToggleRun) {
+                    velocity.x = (inputVector.x * carrySomeoneRunSpeed) * Time.fixedDeltaTime;
+                    velocity.z = (inputVector.y * carrySomeoneRunSpeed) * Time.fixedDeltaTime;
+                }
+                else if (isToggleTackle) {
+                    velocity.x = (tackleDirection.x * tackleSpeed * 0.8f) * Time.fixedDeltaTime;
+                    velocity.z = (tackleDirection.y * tackleSpeed * 0.8f) * Time.fixedDeltaTime;
+                }
+                else {
+                    velocity.x = (inputVector.x * carrySomeoneWalkSpeed) * Time.fixedDeltaTime;
+                    velocity.z = (inputVector.y * carrySomeoneWalkSpeed) * Time.fixedDeltaTime;
+                }
             }
-            else if (isToggleTackle) {
-                velocity.x = (tackleDirection.x * tackleSpeed) * Time.fixedDeltaTime;
-                velocity.z = (tackleDirection.y * tackleSpeed) * Time.fixedDeltaTime;
+            else
+            {
+                if (isToggleRun) {
+                    velocity.x = (inputVector.x * runSpeed) * Time.fixedDeltaTime;
+                    velocity.z = (inputVector.y * runSpeed) * Time.fixedDeltaTime;
+                }
+                else if (isToggleTackle) {
+                    velocity.x = (tackleDirection.x * tackleSpeed) * Time.fixedDeltaTime;
+                    velocity.z = (tackleDirection.y * tackleSpeed) * Time.fixedDeltaTime;
+                }
+                else {
+                    velocity.x = (inputVector.x * walkSpeed) * Time.fixedDeltaTime;
+                    velocity.z = (inputVector.y * walkSpeed) * Time.fixedDeltaTime;
+                }
             }
-            else {
-                velocity.x = (inputVector.x * walkSpeed) * Time.fixedDeltaTime;
-                velocity.z = (inputVector.y * walkSpeed) * Time.fixedDeltaTime;
-            }
+
 
             velocity.y = rigid.velocity.y + (-gravity * Time.fixedDeltaTime);
             rigid.velocity = velocity;
@@ -251,7 +296,7 @@ namespace Ludumdare43
 
             if (isCarrySomeone && !carryPlayer.IsBreakFree) {
                 carryTarget.position = carryPoint.position;
-                carryTarget.Rotate(Vector3.up * 60.0f * Time.deltaTime, Space.World);
+                carryTarget.Rotate(Vector3.up * 20.0f * Time.deltaTime, Space.World);
             }
             else {
                 isCarrySomeone = false;
@@ -349,6 +394,7 @@ namespace Ludumdare43
         {
             tackleDirection = lastInputVector;
             isToggleTackle = true;
+            anim.SetTrigger("Tackle");
         }
 
         void tackleTimer_OnTimerStop()

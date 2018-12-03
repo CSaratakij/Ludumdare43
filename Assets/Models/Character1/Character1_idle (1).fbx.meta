@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 5db5ade5c3346b546b0d31f54ba7f063
+guid: 08c4b1412ebf8eb48a726cfae6d599ab
 ModelImporter:
   serializedVersion: 23
   fileIDToRecycleName:
@@ -137,7 +137,7 @@ ModelImporter:
     4300006: Character1_def:LeftEyebrow1
     4300008: Character1_def:Mouth
     4300010: Character1_def:Body1
-    7400000: Idle
+    7400000: Take 001
     9500000: //RootNode
     13700000: Character1_def:Body1
     13700002: Character1_def:LeftEye1
@@ -174,10 +174,10 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: Idle
+      name: Take 001
       takeName: Take 001
-      firstFrame: 1
-      lastFrame: 19
+      firstFrame: 0
+      lastFrame: 143
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -200,7 +200,7 @@ ModelImporter:
       transformMask: []
       maskType: 3
       maskSource: {instanceID: 0}
-      additiveReferencePoseFrame: 1
+      additiveReferencePoseFrame: 0
     isReadable: 1
   meshes:
     lODScreenPercentages: []
@@ -224,7 +224,7 @@ ModelImporter:
     secondaryUVHardAngle: 88
     secondaryUVPackMargin: 4
     useFileScale: 1
-    previousCalculatedGlobalScale: 0.39999998
+    previousCalculatedGlobalScale: 0.01
     hasPreviousCalculatedGlobalScale: 1
   tangentSpace:
     normalSmoothAngle: 60
