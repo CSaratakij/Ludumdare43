@@ -9,6 +9,8 @@
 
         static bool isGameStart;
 
+        public static bool IsGameStart { get { return isGameStart; } }
+
 
         public static void GameStart()
         {
@@ -30,6 +32,11 @@
 
             if (OnGameOver != null)
                 OnGameOver();
+        }
+
+        public static void Reset()
+        {
+            isGameStart = false;
         }
     }
 }

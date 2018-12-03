@@ -101,7 +101,7 @@ namespace Ludumdare43
         int getupProgress;
 
         Vector2 inputVector;
-        Vector2 throwDirection;
+        Vector3 throwDirection;
         Vector2 lastInputVector;
         Vector2 tackleDirection;
 
@@ -284,9 +284,11 @@ namespace Ludumdare43
             if (isHasBeenThrowed) {
 
                 velocity.x = (throwDirection.x * walkSpeed) * Time.fixedDeltaTime;
-                velocity.z = (throwDirection.y * walkSpeed) * Time.fixedDeltaTime;
+                velocity.z = (throwDirection.z * walkSpeed) * Time.fixedDeltaTime;
 
+                velocity.y = rigid.velocity.y + (throwDirection.y * walkSpeed) * Time.fixedDeltaTime;
                 velocity.y = rigid.velocity.y + (-gravity * Time.fixedDeltaTime);
+
                 rigid.velocity = velocity;
             }
             else {
