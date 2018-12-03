@@ -16,6 +16,8 @@ namespace Ludumdare43
         public event _Func OnTimerStart;
         public event _Func OnTimerStop;
 
+        public bool IsStart { get { return isStart; } }
+
         bool isStart;
         bool isPause;
 

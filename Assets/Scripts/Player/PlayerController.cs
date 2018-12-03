@@ -61,6 +61,9 @@ namespace Ludumdare43
         Timer tackleCooldown;
 
         [SerializeField]
+        Timer gainInputControlCooldown;
+
+        [SerializeField]
         Status health;
 
         [SerializeField]
@@ -68,6 +71,12 @@ namespace Ludumdare43
 
         [SerializeField]
         LayerMask targetLayer;
+
+        [SerializeField]
+        LayerMask groundLayer;
+
+        [SerializeField]
+        Transform groundPoint;
 
         public bool IsTarget { get { return isTarget; } }
         public bool IsTackling { get { return isToggleTackle; } }
@@ -83,6 +92,8 @@ namespace Ludumdare43
         bool isStunt;
         bool isPickedUp;
         bool isBreakFree = true;
+        bool isThrowSomeone = false;
+        bool isHasBeenThrowed = false;
 
         bool isCanTackle = true;
         bool isCanToggleRun = true;
@@ -90,6 +101,7 @@ namespace Ludumdare43
         int getupProgress;
 
         Vector2 inputVector;
+        Vector2 throwDirection;
         Vector2 lastInputVector;
         Vector2 tackleDirection;
 
@@ -135,12 +147,13 @@ namespace Ludumdare43
         void LateUpdate()
         {
             LookToInputDirection();
-            CarrySomeone();
+            CarrySomeoneHandler();
         }
 
         void FixedUpdate()
         {
             MovementHandler();
+            ReceiveThrowHandler();
         }
 
         void Initialize()
@@ -151,6 +164,10 @@ namespace Ludumdare43
 
         void InputHandler()
         {
+            if (isHasBeenThrowed) {
+                return;
+            }
+
             if (isStunt) {
                 inputVector = Vector2.zero;
                 return;
@@ -186,6 +203,11 @@ namespace Ludumdare43
             if (isCanTackle && !isCarrySomeone && Input.GetButtonDown("Joy" + playerIndex + "Tackle")) {
                 runTimer.Stop();
                 tackleTimer.Countdown();
+            }
+
+            if (isCarrySomeone && Input.GetButtonDown("Joy" + playerIndex + "Throw")) {
+                isCarrySomeone = false;
+                isThrowSomeone = true;
             }
 
             if (isPickedUp)
@@ -235,8 +257,8 @@ namespace Ludumdare43
                     velocity.z = (inputVector.y * carrySomeoneRunSpeed) * Time.fixedDeltaTime;
                 }
                 else if (isToggleTackle) {
-                    velocity.x = (tackleDirection.x * tackleSpeed * 0.8f) * Time.fixedDeltaTime;
-                    velocity.z = (tackleDirection.y * tackleSpeed * 0.8f) * Time.fixedDeltaTime;
+                    velocity.x = (transform.forward.x * tackleSpeed * 0.8f) * Time.fixedDeltaTime;
+                    velocity.z = (transform.forward.z * tackleSpeed * 0.8f) * Time.fixedDeltaTime;
                 }
                 else {
                     velocity.x = (inputVector.x * carrySomeoneWalkSpeed) * Time.fixedDeltaTime;
@@ -250,8 +272,8 @@ namespace Ludumdare43
                     velocity.z = (inputVector.y * runSpeed) * Time.fixedDeltaTime;
                 }
                 else if (isToggleTackle) {
-                    velocity.x = (tackleDirection.x * tackleSpeed) * Time.fixedDeltaTime;
-                    velocity.z = (tackleDirection.y * tackleSpeed) * Time.fixedDeltaTime;
+                    velocity.x = (transform.forward.x * tackleSpeed) * Time.fixedDeltaTime;
+                    velocity.z = (transform.forward.z * tackleSpeed) * Time.fixedDeltaTime;
                 }
                 else {
                     velocity.x = (inputVector.x * walkSpeed) * Time.fixedDeltaTime;
@@ -259,9 +281,30 @@ namespace Ludumdare43
                 }
             }
 
+            if (isHasBeenThrowed) {
 
-            velocity.y = rigid.velocity.y + (-gravity * Time.fixedDeltaTime);
-            rigid.velocity = velocity;
+                velocity.x = (throwDirection.x * walkSpeed) * Time.fixedDeltaTime;
+                velocity.z = (throwDirection.y * walkSpeed) * Time.fixedDeltaTime;
+
+                velocity.y = rigid.velocity.y + (-gravity * Time.fixedDeltaTime);
+                rigid.velocity = velocity;
+            }
+            else {
+                velocity.y = rigid.velocity.y + (-gravity * Time.fixedDeltaTime);
+                rigid.velocity = velocity;
+            }
+        }
+
+        void ReceiveThrowHandler()
+        {
+            if (!isHasBeenThrowed)
+                return;
+
+            bool isGround = Physics.BoxCast(groundPoint.position, new Vector3(3.0f, 1.0f, 3.0f), Vector3.down, Quaternion.identity, 1.0f, groundLayer);
+
+            if (isGround && !gainInputControlCooldown.IsStart) {
+                gainInputControlCooldown.Countdown();
+            }
         }
 
         void LookToInputDirection()
@@ -289,7 +332,7 @@ namespace Ludumdare43
             }
         }
 
-        void CarrySomeone()
+        void CarrySomeoneHandler()
         {
             if (carryPlayer == null || carryRigid == null || carryTarget == null)
                 return;
@@ -300,7 +343,20 @@ namespace Ludumdare43
             }
             else {
                 isCarrySomeone = false;
-                carryRigid.velocity = (Vector3.up * breakFreeForce) * Time.fixedDeltaTime;
+
+                if (isThrowSomeone) {
+                    var direction = (transform.forward * 2.0f) + (Vector3.up * 0.5f);
+                    var velocity = (direction * breakFreeForce) * Time.fixedDeltaTime;
+
+                    carryRigid.velocity = velocity;
+                    carryPlayer.MarkThrowed(true, direction);
+
+                    UnPickOldOne();
+                    isThrowSomeone = false;
+                }
+                else {
+                    carryRigid.velocity = (Vector3.up * breakFreeForce) * Time.fixedDeltaTime;
+                }
 
                 carryPlayer = null;
                 carryTarget = null;
@@ -345,6 +401,7 @@ namespace Ludumdare43
             tackleTimer.OnTimerStop += tackleTimer_OnTimerStop;
 
             tackleCooldown.OnTimerStop += tackleCooldown_OnTimerStop;
+            gainInputControlCooldown.OnTimerStop += gainInputControlCooldown_OnTimerStop;
         }
 
         void UnsubscribeEvents()
@@ -361,6 +418,7 @@ namespace Ludumdare43
             tackleTimer.OnTimerStop -= tackleTimer_OnTimerStop;
 
             tackleCooldown.OnTimerStop -= tackleCooldown_OnTimerStop;
+            gainInputControlCooldown.OnTimerStop += gainInputControlCooldown_OnTimerStop;
         }
 
         void runTimer_OnTimerStart()
@@ -410,6 +468,11 @@ namespace Ludumdare43
             isCanTackle = true;
         }
 
+        void gainInputControlCooldown_OnTimerStop()
+        {
+            isHasBeenThrowed = false;
+        }
+
         public void SetTarget(bool value)
         {
             isTarget = value;
@@ -457,6 +520,16 @@ namespace Ludumdare43
             else {
                 lastInputDir = Vector3.zero;
             }
+        }
+
+        public void MarkThrowed(bool value, Vector3 direction)
+        {
+            if (value) {
+                inputVector = Vector2.zero;
+                throwDirection = direction;
+            }
+
+            isHasBeenThrowed = value;
         }
     }
 }
