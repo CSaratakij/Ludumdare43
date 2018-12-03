@@ -55,7 +55,13 @@ namespace Ludumdare43
             if (Input.GetButtonDown("Cancel")) {
                 HideAll();
                 Show((int)View.Pause, true);
+
                 uiLogic.TogglePause();
+
+                if (!uiLogic.IsPause) {
+                    HideAll();
+                    Show((int)View.InGameMenu, true);
+                }
             }
         }
 
