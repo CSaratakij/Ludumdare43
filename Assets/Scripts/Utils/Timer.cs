@@ -16,6 +16,7 @@ namespace Ludumdare43
         public event _Func OnTimerStart;
         public event _Func OnTimerStop;
 
+        public float Current { get { return current; } }
         public bool IsStart { get { return isStart; } }
 
         bool isStart;
@@ -74,6 +75,7 @@ namespace Ludumdare43
         public void Reset()
         {
             current = max;
+            isPause = false;
             isStart = false;
         }
 

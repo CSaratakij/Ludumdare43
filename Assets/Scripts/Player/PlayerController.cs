@@ -78,12 +78,19 @@ namespace Ludumdare43
         [SerializeField]
         Transform groundPoint;
 
+        public int PlayerIndex { get { return playerIndex; } }
+
         public bool IsTarget { get { return isTarget; } }
         public bool IsTackling { get { return isToggleTackle; } }
         public bool IsPickedUp { get { return isPickedUp; } }
         public bool IsBreakFree { get { return isBreakFree; } }
         public bool IsCarrySomeone { get { return isCarrySomeone; } }
+
+        public PlayerController LastCarrier { get { return lastCarrier; } }
         public PlayerController CarryPlayer { get { return carryPlayer; } }
+
+        public Status Health { get { return health; } }
+        public Color Color { get { return playerMaterial[PlayerIndex].color; } }
 
         bool isToggleRun;
         bool isToggleTackle;
@@ -101,13 +108,12 @@ namespace Ludumdare43
         int getupProgress;
 
         Vector2 inputVector;
-        Vector3 throwDirection;
         Vector2 lastInputVector;
-        Vector2 tackleDirection;
 
         Vector3 velocity;
         Vector3 lastInputDir;
         Vector3 relativeVector;
+        Vector3 throwDirection;
 
         Quaternion targetRotation;
 
@@ -115,6 +121,8 @@ namespace Ludumdare43
         Rigidbody carryRigid;
 
         Transform carryTarget;
+
+        PlayerController lastCarrier;
         PlayerController carryPlayer;
 
         Collider[] hits;
@@ -124,13 +132,6 @@ namespace Ludumdare43
         {
             Initialize();
             SubscribeEvents();
-        }
-
-        //Test
-        void Start()
-        {
-            if (playerIndex == 0)
-                SetTarget(true);
         }
 
         void OnDestroy()
@@ -164,9 +165,11 @@ namespace Ludumdare43
 
         void InputHandler()
         {
-            if (isHasBeenThrowed) {
+            if (!GameController.IsGameStart)
                 return;
-            }
+
+            if (isHasBeenThrowed)
+                return;
 
             if (isStunt) {
                 inputVector = Vector2.zero;
@@ -347,7 +350,7 @@ namespace Ludumdare43
                 isCarrySomeone = false;
 
                 if (isThrowSomeone) {
-                    var direction = (transform.forward * 2.0f) + (Vector3.up * 0.5f);
+                    var direction = (transform.forward * 2.0f) + (Vector3.up * 0.8f);
                     var velocity = (direction * breakFreeForce) * Time.fixedDeltaTime;
 
                     carryRigid.velocity = velocity;
@@ -452,7 +455,6 @@ namespace Ludumdare43
 
         void tackleTimer_OnTimerStart()
         {
-            tackleDirection = lastInputVector;
             isToggleTackle = true;
             anim.SetTrigger("Tackle");
         }
@@ -489,16 +491,18 @@ namespace Ludumdare43
         public void Pickup(PlayerController target, bool value)
         {
             isCarrySomeone = value;
-
             carryPlayer = target;
+
             carryTarget = target.transform;
             carryRigid = target.rigid;
 
             carryRigid.isKinematic = value;
             target.GetComponent<CapsuleCollider>().enabled = !value;
 
-            if (value)
+            if (value) {
                 carryTarget.rotation = Quaternion.Euler(-90.0f, 0.0f, 0.0f);
+                carryPlayer.SetLastCarrier(this);
+            }
 
             target.MarkPickup(value);
         }
@@ -532,6 +536,17 @@ namespace Ludumdare43
             }
 
             isHasBeenThrowed = value;
+        }
+
+        public void ClearThrow()
+        {
+            inputVector = Vector2.zero;
+            isHasBeenThrowed = false;
+        }
+
+        public void SetLastCarrier(PlayerController carrier)
+        {
+            lastCarrier = carrier;
         }
     }
 }

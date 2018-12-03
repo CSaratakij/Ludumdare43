@@ -11,6 +11,7 @@ namespace Ludumdare43
         int max;
 
 
+        public bool IsEmpty { get { return current <= 0; } }
         public int Current { get { return current; } }
         public int Max { get { return max; } }
 
