@@ -145,7 +145,27 @@ ModelImporter:
     13700006: Character1_def:Mouth 1
     13700008: Character1_def:RightEye1
     13700010: Character1_def:RightEyebrow1
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Character1_def_lambert2
+    second: {fileID: 2100000, guid: 0ca676dba6070ae43a01ebc10fdc11ea, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Character1_def_lambert3
+    second: {fileID: 2100000, guid: 3b6194ac079171c409da9a0417f9e33d, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Character1_def_lambert4
+    second: {fileID: 2100000, guid: 47e6c447d02310a479f3014dd0dc50f6, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: lambert1
+    second: {fileID: 2100000, guid: 8e380944df905d545bd3d13f9c9ec7f4, type: 2}
   materials:
     importMaterials: 1
     materialName: 0
