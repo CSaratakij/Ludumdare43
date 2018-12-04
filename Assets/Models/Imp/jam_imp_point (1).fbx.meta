@@ -1,0 +1,260 @@
+fileFormatVersion: 2
+guid: 34f60e9a73ce812429f8bd52ba169b64
+ModelImporter:
+  serializedVersion: 23
+  fileIDToRecycleName:
+    100000: Imp_rig_rig:Imp_def:armRbnLFT1_bJnt
+    100002: Imp_rig_rig:Imp_def:armRbnLFT2_bJnt
+    100004: Imp_rig_rig:Imp_def:armRbnLFT3_bJnt
+    100006: Imp_rig_rig:Imp_def:armRbnLFT4_bJnt
+    100008: Imp_rig_rig:Imp_def:armRbnLFT5_bJnt
+    100010: Imp_rig_rig:Imp_def:armRbnLFT6_bJnt
+    100012: Imp_rig_rig:Imp_def:armRbnRGT1_bJnt
+    100014: Imp_rig_rig:Imp_def:armRbnRGT2_bJnt
+    100016: Imp_rig_rig:Imp_def:armRbnRGT3_bJnt
+    100018: Imp_rig_rig:Imp_def:armRbnRGT4_bJnt
+    100020: Imp_rig_rig:Imp_def:armRbnRGT5_bJnt
+    100022: Imp_rig_rig:Imp_def:armRbnRGT6_bJnt
+    100024: Imp_rig_rig:Imp_def:armShoulderLFT_bJnt
+    100026: Imp_rig_rig:Imp_def:armShoulderRGT_bJnt
+    100028: Imp_rig_rig:Imp_def:clavLFT_bJnt
+    100030: Imp_rig_rig:Imp_def:clavRGT_bJnt
+    100032: Imp_rig_rig:Imp_def:eyeBlowLFT_bJnt
+    100034: Imp_rig_rig:Imp_def:eyeBlowRGT_bJnt
+    100036: Imp_rig_rig:Imp_def:eyeLFT_bJnt
+    100038: Imp_rig_rig:Imp_def:eyeRGT_bJnt
+    100040: Imp_rig_rig:Imp_def:head_bJnt
+    100042: Imp_rig_rig:Imp_def:hipSca_bJnt
+    100044: Imp_rig_rig:Imp_def:Imp:Body
+    100046: Imp_rig_rig:Imp_def:Imp:Body 1
+    100048: Imp_rig_rig:Imp_def:Imp:Face
+    100050: Imp_rig_rig:Imp_def:Imp:Imp_Character
+    100052: Imp_rig_rig:Imp_def:Imp:LeftEye
+    100054: Imp_rig_rig:Imp_def:Imp:LeftEye 1
+    100056: Imp_rig_rig:Imp_def:Imp:Mouth
+    100058: Imp_rig_rig:Imp_def:Imp:Mouth 1
+    100060: Imp_rig_rig:Imp_def:Imp:Navel
+    100062: Imp_rig_rig:Imp_def:Imp:Navel 1
+    100064: Imp_rig_rig:Imp_def:Imp:pSphere3
+    100066: Imp_rig_rig:Imp_def:Imp:RightEye
+    100068: Imp_rig_rig:Imp_def:Imp:RightEye 1
+    100070: Imp_rig_rig:Imp_def:Imp:Weapon
+    100072: Imp_rig_rig:Imp_def:Imp:Weapon 1
+    100074: Imp_rig_rig:Imp_def:legFoot_bJnt
+    100076: Imp_rig_rig:Imp_def:legFoot_bJnt 1
+    100078: Imp_rig_rig:Imp_def:legLFT1_bJnt
+    100080: Imp_rig_rig:Imp_def:legLFT2_bJnt
+    100082: Imp_rig_rig:Imp_def:legLFT3_bJnt
+    100084: Imp_rig_rig:Imp_def:legLFT4_bJnt
+    100086: Imp_rig_rig:Imp_def:legLFT5_bJnt
+    100088: Imp_rig_rig:Imp_def:legLFT6_bJnt
+    100090: Imp_rig_rig:Imp_def:legLFT_bJnt
+    100092: Imp_rig_rig:Imp_def:legRGT1_bJnt
+    100094: Imp_rig_rig:Imp_def:legRGT2_bJnt
+    100096: Imp_rig_rig:Imp_def:legRGT3_bJnt
+    100098: Imp_rig_rig:Imp_def:legRGT4_bJnt
+    100100: Imp_rig_rig:Imp_def:legRGT5_bJnt
+    100102: Imp_rig_rig:Imp_def:legRGT6_bJnt
+    100104: Imp_rig_rig:Imp_def:legRGT_bJnt
+    100106: Imp_rig_rig:Imp_def:legToe_bJnt
+    100108: Imp_rig_rig:Imp_def:legToe_bJnt 1
+    100110: Imp_rig_rig:Imp_def:mouth_bJnt
+    100112: Imp_rig_rig:Imp_def:Root_bJnt
+    100114: Imp_rig_rig:Imp_def:Spine1_bJnt
+    100116: Imp_rig_rig:Imp_def:Spine2_bJnt
+    100118: Imp_rig_rig:Imp_def:Spine3_bJnt
+    100120: Imp_rig_rig:Imp_def:Spine4_bJnt
+    100122: Imp_rig_rig:Imp_def:Spine5_bJnt
+    100124: Imp_rig_rig:Imp_def:tail1_bJnt
+    100126: Imp_rig_rig:Imp_def:tail2_bJnt
+    100128: Imp_rig_rig:Imp_def:tail3_bJnt
+    100130: Imp_rig_rig:Imp_def:tail4_bJnt
+    100132: Imp_rig_rig:Imp_def:tail5_bJnt
+    100134: Imp_rig_rig:Imp_def:tail6_bJnt
+    100136: Imp_rig_rig:Imp_def:tail7_bJnt
+    100138: Imp_rig_rig:Imp_def:wing1LFT_tmpJnt
+    100140: Imp_rig_rig:Imp_def:wing1RGT_tmpJnt
+    100142: Imp_rig_rig:Imp_def:wing2LFT_tmpJnt
+    100144: Imp_rig_rig:Imp_def:wing2RGT_tmpJnt
+    100146: Imp_rig_rig:Imp_def:wingLFT_tmpJnt
+    100148: Imp_rig_rig:Imp_def:wingRGT_tmpJnt
+    100150: //RootNode
+    400000: Imp_rig_rig:Imp_def:armRbnLFT1_bJnt
+    400002: Imp_rig_rig:Imp_def:armRbnLFT2_bJnt
+    400004: Imp_rig_rig:Imp_def:armRbnLFT3_bJnt
+    400006: Imp_rig_rig:Imp_def:armRbnLFT4_bJnt
+    400008: Imp_rig_rig:Imp_def:armRbnLFT5_bJnt
+    400010: Imp_rig_rig:Imp_def:armRbnLFT6_bJnt
+    400012: Imp_rig_rig:Imp_def:armRbnRGT1_bJnt
+    400014: Imp_rig_rig:Imp_def:armRbnRGT2_bJnt
+    400016: Imp_rig_rig:Imp_def:armRbnRGT3_bJnt
+    400018: Imp_rig_rig:Imp_def:armRbnRGT4_bJnt
+    400020: Imp_rig_rig:Imp_def:armRbnRGT5_bJnt
+    400022: Imp_rig_rig:Imp_def:armRbnRGT6_bJnt
+    400024: Imp_rig_rig:Imp_def:armShoulderLFT_bJnt
+    400026: Imp_rig_rig:Imp_def:armShoulderRGT_bJnt
+    400028: Imp_rig_rig:Imp_def:clavLFT_bJnt
+    400030: Imp_rig_rig:Imp_def:clavRGT_bJnt
+    400032: Imp_rig_rig:Imp_def:eyeBlowLFT_bJnt
+    400034: Imp_rig_rig:Imp_def:eyeBlowRGT_bJnt
+    400036: Imp_rig_rig:Imp_def:eyeLFT_bJnt
+    400038: Imp_rig_rig:Imp_def:eyeRGT_bJnt
+    400040: Imp_rig_rig:Imp_def:head_bJnt
+    400042: Imp_rig_rig:Imp_def:hipSca_bJnt
+    400044: Imp_rig_rig:Imp_def:Imp:Body
+    400046: Imp_rig_rig:Imp_def:Imp:Body 1
+    400048: Imp_rig_rig:Imp_def:Imp:Face
+    400050: Imp_rig_rig:Imp_def:Imp:Imp_Character
+    400052: Imp_rig_rig:Imp_def:Imp:LeftEye
+    400054: Imp_rig_rig:Imp_def:Imp:LeftEye 1
+    400056: Imp_rig_rig:Imp_def:Imp:Mouth
+    400058: Imp_rig_rig:Imp_def:Imp:Mouth 1
+    400060: Imp_rig_rig:Imp_def:Imp:Navel
+    400062: Imp_rig_rig:Imp_def:Imp:Navel 1
+    400064: Imp_rig_rig:Imp_def:Imp:pSphere3
+    400066: Imp_rig_rig:Imp_def:Imp:RightEye
+    400068: Imp_rig_rig:Imp_def:Imp:RightEye 1
+    400070: Imp_rig_rig:Imp_def:Imp:Weapon
+    400072: Imp_rig_rig:Imp_def:Imp:Weapon 1
+    400074: Imp_rig_rig:Imp_def:legFoot_bJnt
+    400076: Imp_rig_rig:Imp_def:legFoot_bJnt 1
+    400078: Imp_rig_rig:Imp_def:legLFT1_bJnt
+    400080: Imp_rig_rig:Imp_def:legLFT2_bJnt
+    400082: Imp_rig_rig:Imp_def:legLFT3_bJnt
+    400084: Imp_rig_rig:Imp_def:legLFT4_bJnt
+    400086: Imp_rig_rig:Imp_def:legLFT5_bJnt
+    400088: Imp_rig_rig:Imp_def:legLFT6_bJnt
+    400090: Imp_rig_rig:Imp_def:legLFT_bJnt
+    400092: Imp_rig_rig:Imp_def:legRGT1_bJnt
+    400094: Imp_rig_rig:Imp_def:legRGT2_bJnt
+    400096: Imp_rig_rig:Imp_def:legRGT3_bJnt
+    400098: Imp_rig_rig:Imp_def:legRGT4_bJnt
+    400100: Imp_rig_rig:Imp_def:legRGT5_bJnt
+    400102: Imp_rig_rig:Imp_def:legRGT6_bJnt
+    400104: Imp_rig_rig:Imp_def:legRGT_bJnt
+    400106: Imp_rig_rig:Imp_def:legToe_bJnt
+    400108: Imp_rig_rig:Imp_def:legToe_bJnt 1
+    400110: Imp_rig_rig:Imp_def:mouth_bJnt
+    400112: Imp_rig_rig:Imp_def:Root_bJnt
+    400114: Imp_rig_rig:Imp_def:Spine1_bJnt
+    400116: Imp_rig_rig:Imp_def:Spine2_bJnt
+    400118: Imp_rig_rig:Imp_def:Spine3_bJnt
+    400120: Imp_rig_rig:Imp_def:Spine4_bJnt
+    400122: Imp_rig_rig:Imp_def:Spine5_bJnt
+    400124: Imp_rig_rig:Imp_def:tail1_bJnt
+    400126: Imp_rig_rig:Imp_def:tail2_bJnt
+    400128: Imp_rig_rig:Imp_def:tail3_bJnt
+    400130: Imp_rig_rig:Imp_def:tail4_bJnt
+    400132: Imp_rig_rig:Imp_def:tail5_bJnt
+    400134: Imp_rig_rig:Imp_def:tail6_bJnt
+    400136: Imp_rig_rig:Imp_def:tail7_bJnt
+    400138: Imp_rig_rig:Imp_def:wing1LFT_tmpJnt
+    400140: Imp_rig_rig:Imp_def:wing1RGT_tmpJnt
+    400142: Imp_rig_rig:Imp_def:wing2LFT_tmpJnt
+    400144: Imp_rig_rig:Imp_def:wing2RGT_tmpJnt
+    400146: Imp_rig_rig:Imp_def:wingLFT_tmpJnt
+    400148: Imp_rig_rig:Imp_def:wingRGT_tmpJnt
+    400150: //RootNode
+    2100000: lambert1
+    2100002: Imp_rig_rig_Imp_def_Imp_lambert7
+    2100004: Imp_rig_rig_Imp_def_Imp_lambert10
+    2100006: Imp_rig_rig_Imp_def_Imp_lambert6
+    4300000: Imp_rig_rig:Imp_def:Imp:Body
+    4300002: Imp_rig_rig:Imp_def:Imp:Weapon
+    4300004: Imp_rig_rig:Imp_def:Imp:RightEye
+    4300006: Imp_rig_rig:Imp_def:Imp:LeftEye
+    4300008: Imp_rig_rig:Imp_def:Imp:Mouth
+    4300010: Imp_rig_rig:Imp_def:Imp:Navel
+    4300012: Imp_rig_rig:Imp_def:Imp:pSphere3
+    7400000: Take 001
+    9500000: //RootNode
+    13700000: Imp_rig_rig:Imp_def:Imp:Body 1
+    13700002: Imp_rig_rig:Imp_def:Imp:LeftEye 1
+    13700004: Imp_rig_rig:Imp_def:Imp:Mouth 1
+    13700006: Imp_rig_rig:Imp_def:Imp:Navel 1
+    13700008: Imp_rig_rig:Imp_def:Imp:pSphere3
+    13700010: Imp_rig_rig:Imp_def:Imp:RightEye 1
+    13700012: Imp_rig_rig:Imp_def:Imp:Weapon 1
+    2186277476908879412: ImportLogs
+  externalObjects: {}
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+    materialLocation: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    importConstraints: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    preserveHierarchy: 0
+    indexFormat: 0
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+    previousCalculatedGlobalScale: 0.01
+    hasPreviousCalculatedGlobalScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
